@@ -7,6 +7,7 @@ const { info } = pkg;
 dotenv.config();
 
 let database = {};
+const db_NAME = "Blog";
 
 async function initialize() {
   try {
@@ -17,9 +18,9 @@ async function initialize() {
         password: "Harshil@11",
         database: "Blog",
       });
-      await connection.query(`CREATE DATABASE IF NOT EXISTS \`${db}\`;`);
+      await connection.query(`CREATE DATABASE IF NOT EXISTS \`${db_NAME}\`;`);
     } catch (error) {
-      console.log("first catch", error);
+      console.log("first catch not Working", error);
     }
     try {
       const sequelize = new Sequelize("Blog", "root", "Harshil@11", {
