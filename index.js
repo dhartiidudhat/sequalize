@@ -1,8 +1,6 @@
 import { sequelize } from "./src/config/db.js";
-import Emp from "./src/Models/First-Week/emp.js";
-import User from "./src/Models/First-Week/user.js";
-import UserTest from "./src/Models/First-Week/user_test.js";
-import UserOne from "./src/Models/First-Week/user_class.js";
+import "./src/Models/First-Week/index.js";
+
 import dotenv from "dotenv";
 dotenv.config();
 

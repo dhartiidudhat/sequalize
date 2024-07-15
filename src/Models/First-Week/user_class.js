@@ -13,13 +13,20 @@ UserOne.init(
       type: DataTypes.STRING,
       defaultValue: "Dharti",
     },
+    myDate: {
+      type: DataTypes.DATE,
+      defaultValue: DataTypes.NOW,
+    },
   },
   {
     sequelize,
-    // modelName: "UserTWo",
+    modelName: "User2",
+    freezeTableName: true,
   }
 );
 
-console.log("---->UseTwo", UserOne === sequelize.model.userTWo);
+console.log("----> Models registered in Sequelize:", sequelize.models);
+console.log("----> UserTwo Model from Sequelize:", sequelize.models.User2);
+console.log("----> UserTwo comparison:", UserOne === sequelize.models.User2);
 
 export default UserOne;
