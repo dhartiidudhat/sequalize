@@ -3,7 +3,7 @@
 import { DataTypes } from "sequelize";
 import { sequelize } from "../../config/db.js";
 
-export const User1 = sequelize.define(
+const User1 = sequelize.define(
   "User1",
   {
     firstName: {
@@ -17,3 +17,5 @@ export const User1 = sequelize.define(
   },
   { timestamps: false, freezeTableName: true }
 );
+
+export default User1;

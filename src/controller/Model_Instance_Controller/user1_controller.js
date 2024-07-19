@@ -1,4 +1,4 @@
-import { User1 } from "../../Models/Model_Instance/index.js";
+import { User1 } from "../../models/Model_Instance/index.js";
 
 export const addUser = async (req, res) => {
   try {

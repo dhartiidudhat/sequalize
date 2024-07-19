@@ -13,3 +13,14 @@ export const sequelize = new Sequelize(
     logging: false,
   }
 );
+
+export const authentication = async () => {
+  try {
+    sequelize.authenticate();
+
+    // sequelize.sync({ force: true });
+    console.log("DB connected successfully!");
+  } catch (error) {
+    console.log("DB not connected!");
+  }
+};

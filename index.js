@@ -2,30 +2,22 @@ import express from "express";
 import dotenv from "dotenv";
 dotenv.config();
 const app = express();
+app.use(bodyParser.json());
 
-import { sequelize } from "./src/config/db.js";
-// import "./src/Models/Model_Basic/index.js";
-import "./src/Models/Model_Instance/index.js";
-import routes from "./src/Routes/userRoutes.js";
+import { authentication, sequelize } from "./src/config/db.js";
+// import "./src/models/Model_Basic/index.js";
 
-app.use("/api", routes);
+import { model_quering_basic, model_instance } from "./src/models/index.js";
+
+import Route from "./src/Routes/index.js";
+import bodyParser from "body-parser";
+
+app.use("/api", Route);
 
 (async () => {
-  try {
-    await sequelize.authenticate();
-    console.log("---->", process.env.MY_SQL_DB_DATABASE);
-    console.log("-----> DB connection has been established!");
-
-    console.log("Attempting to sync models...");
-    // await sequelize.sync({ force: true });
-    // await sequelize.drop();
-
-    console.log("-----> All models were synchronized successfully.");
-  } catch (error) {
-    console.log("----> Unable to connect to the db!", error);
-  }
+  await authentication();
 })();
 
 app.listen(process.env.PORT, () => {
-  console.log("=---->port listen on port ", process.env.PORT);
+  console.log("Port listen on", process.env.PORT);
 });

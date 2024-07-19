@@ -1,6 +1,6 @@
 import express from "express";
-import { userget } from "../controller/Model_Instance/user.js";
-import { User2, addUser } from "../controller/Model_Instance/index.js";
+import { userget } from "../../controller/Model_Instance_Controller/user.js";
+import { User2, addUser } from "../../controller/Model_Instance_Controller/index.js";
 const routes = express.Router();
 
 routes.get("/hey", userget);
