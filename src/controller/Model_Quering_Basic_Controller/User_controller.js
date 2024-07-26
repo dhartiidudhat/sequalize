@@ -12,7 +12,16 @@ const getUser = async (req, res) => {
 const addUser = async (req, res) => {
   try {
     const { fname, lname } = req.body;
-    const addUser = await user.create({ fname: fname, lname: lname });
+    if (Array.isArray(req.body) || req.body.length > 1) {
+      const userData = req.body.map((data) => ({
+        fname: data.fname,
+        lname: data.lname,
+      }));
+
+      const addUser = await user.bulkCreate(userData);
+    } else {
+      const addUser = await user.create({ fname: fname, lname: lname });
+    }
 
     res.status(201).json({ message: "User add successfully!" });
   } catch (error) {
@@ -42,7 +51,7 @@ const updateUser = async (req, res) => {
     const getUser = await getUserById(id);
 
     if (!getUser) {
-      res.status(400).json({ message: "User not found!" });
+      res.status(400).json({ message: "User not exits!" });
     }
 
     const updateUser = await user.update(
@@ -68,7 +77,7 @@ const deleteUser = async (req, res) => {
     const getUser = await getUserById(id);
 
     if (!getUser) {
-      res.status(400).json({ message: "User not found!" });
+      res.status(400).json({ message: "User not exist!" });
     }
     const deleteUser = await user.destroy({
       where: {

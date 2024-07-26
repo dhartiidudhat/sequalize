@@ -7,7 +7,7 @@ app.use(bodyParser.json());
 import { authentication, sequelize } from "./src/config/db.js";
 // import "./src/models/Model_Basic/index.js";
 
-import { model_quering_basic, model_instance } from "./src/models/index.js";
+import { model_quering_basic } from "./src/models/index.js";
 
 import Route from "./src/Routes/index.js";
 import bodyParser from "body-parser";
