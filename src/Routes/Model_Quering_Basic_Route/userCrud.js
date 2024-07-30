@@ -9,6 +9,9 @@ import {
   addUserBasedOnFields,
   getUserBasedOnAttributes,
   giveTheAlias,
+  includeExcludeData,
+  orderGroup,
+  userOperators,
 } from "../../controller/Model_Quering_Basic_Controller/User1_controller.js";
 const app = express.Router();
 
@@ -22,5 +25,8 @@ app.delete("/deleteUser/:id", deleteUser);
 app.post("/addUserBasedOnFields", addUserBasedOnFields);
 app.get("/getUserBOAttribute", getUserBasedOnAttributes);
 app.get("/getAlias", giveTheAlias);
+app.get("/includeExclude", includeExcludeData);
+app.get("/operators", userOperators);
+app.get("/orderGroup", orderGroup);
 
 export default app;

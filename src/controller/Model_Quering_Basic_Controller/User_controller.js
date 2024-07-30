@@ -90,4 +90,6 @@ const deleteUser = async (req, res) => {
     console.log("DeleteUserController", error);
   }
 };
+
+
 export { getUser, addUser, updateUser, deleteUser };
