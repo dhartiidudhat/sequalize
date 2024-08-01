@@ -11,16 +11,21 @@ const getUser = async (req, res) => {
 
 const addUser = async (req, res) => {
   try {
-    const { fname, lname } = req.body;
+    const { fname, lname, age } = req.body;
     if (Array.isArray(req.body) || req.body.length > 1) {
       const userData = req.body.map((data) => ({
         fname: data.fname,
         lname: data.lname,
+        age: data.age,
       }));
 
       const addUser = await user.bulkCreate(userData);
     } else {
-      const addUser = await user.create({ fname: fname, lname: lname });
+      const addUser = await user.create({
+        fname: fname,
+        lname: lname,
+        age: age,
+      });
     }
 
     res.status(201).json({ message: "User add successfully!" });
@@ -90,6 +95,5 @@ const deleteUser = async (req, res) => {
     console.log("DeleteUserController", error);
   }
 };
-
 
 export { getUser, addUser, updateUser, deleteUser };

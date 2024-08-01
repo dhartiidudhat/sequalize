@@ -10,6 +10,10 @@ const User = sequelize.define("User", {
     type: DataTypes.STRING,
     defaultValue: "Patel",
   },
+  age: {
+    type: DataTypes.INTEGER,
+    allowNull: false,
+  },
 });
 
 export default User;

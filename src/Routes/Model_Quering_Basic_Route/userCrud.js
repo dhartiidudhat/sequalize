@@ -7,10 +7,12 @@ import {
 } from "../../controller/Model_Quering_Basic_Controller/User_controller.js";
 import {
   addUserBasedOnFields,
+  aggregation,
   getUserBasedOnAttributes,
   giveTheAlias,
   includeExcludeData,
   orderGroup,
+  userLimit,
   userOperators,
 } from "../../controller/Model_Quering_Basic_Controller/User1_controller.js";
 const app = express.Router();
@@ -28,5 +30,7 @@ app.get("/getAlias", giveTheAlias);
 app.get("/includeExclude", includeExcludeData);
 app.get("/operators", userOperators);
 app.get("/orderGroup", orderGroup);
+app.get("/limit", userLimit);
+app.get("/aggregation", aggregation);
 
 export default app;

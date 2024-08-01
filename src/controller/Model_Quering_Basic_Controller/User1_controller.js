@@ -1,5 +1,5 @@
 import { sequelize } from "../../config/db.js";
-import { Op } from "sequelize";
+import { Op, where } from "sequelize";
 import user from "../../models/Model_Quering_Basic/user_model.js";
 
 // Add those fields which are in fields
@@ -89,31 +89,34 @@ const userOperators = async (req, res) => {
       //   id: 2,
       // },
       where: {
-        // id: {
-        //   [Op.eq]: 3,
-        // },
-        // fname: {
-        //   [Op.eq]: "dharti",
-        // },
-        // [Op.and]: [{ fname: "dharti" }, { lname: "dudhat" }],
-        // [Op.or]: [{ fname: "dharti" }, { lname: "dudhat" }],
-        // Number comparisons
-        // id: {
-        // [Op.ne]: 4,
-        // [Op.gt]: 7,
-        // [Op.gte]: 7,
-        // [Op.lt]: 7,
-        // [Op.lte]: 7,
-        // [Op.between]: [7, 9],
-        // [Op.notBetween]: [7, 9],
-        // [Op.all]: sequelize.literal("select 4"),
-        // [Op.in]: [7, 10, 14],
-        // [Op.notIn]: [7, 10],
-        // },
+        id: {
+          //   [Op.eq]: 3,
+          // },
+          // fname: {
+          //   [Op.eq]: "dharti",
+          // },
+          // [Op.and]: [{ fname: "dharti" }, { lname: "dudhat" }],
+          // [Op.or]: [{ fname: "dharti" }, { lname: "dudhat" }],
+          // Number comparisons
+          // id: {
+          // [Op.ne]: 4,
+          // [Op.gt]: 7,
+          // [Op.gte]: 7,
+          // [Op.lt]: 7,
+          // [Op.lte]: 7,
+          // [Op.between]: [7, 9],
+          // [Op.notBetween]: [7, 9],
+          // [Op.all]: sequelize.literal("select 4"),
+          // [Op.in]: [7, 10, 14],
+          // [Op.notIn]: [7, 10],
+        },
         // -------------------->
         // Other ones
         // fname: {
-        // [Op.like]: "%Dharti%",
+        // [Op.like]: "%Dharti",
+        // [Op.notLike]: "%dharti",
+        // [Op.startsWith]: "h%",
+        // [Op.endsWith]: "%t",
         // },
         // -------------------->
         // multipal operators
@@ -178,19 +181,144 @@ const userOperators = async (req, res) => {
 
 const orderGroup = async (req, res) => {
   try {
+    // const maxAgeData = await user.findOne({
+    // attributes: [[sequelize.fn("max", sequelize.col("age")), "maxAge"]],
+    // });
+
+    // const maxAge = await maxAgeData.get("maxAge");
     const data = await user.findAll({
       order: [
-        // ["fname"]
+        // ["fname"],
+        // ["fname", "DESC"],
+        // ["age"],
+        // [sequelize.col("lname"), "desc"],
       ],
     });
+
+    const userData = await user.findAll({
+      // attributes: [
+      //   "fname", // Grouped column
+      //   [sequelize.fn("MAX", sequelize.col("id")), "maxId"], // Aggregated column example
+      //   [sequelize.fn("MAX", sequelize.col("lname")), "maxLname"], // Aggregated column example
+      //   [sequelize.fn("MAX", sequelize.col("age")), "maxAge"], // Aggregated column example
+      //   [sequelize.fn("MAX", sequelize.col("createdAt")), "maxCreatedAt"], // Aggregated column example
+      //   [sequelize.fn("MAX", sequelize.col("updatedAt")), "maxUpdatedAt"], // Aggregated column example
+      // ],
+      // group: ["fname"], // Group by column
+      // order: [["fname", "desc"]], // Optional: to order the grouped
+
+      attributes: [
+        "fname",
+        // ["fname", "foirst_Name"],
+        [sequelize.fn("count", sequelize.col("age")), "totalAge"],
+      ],
+      group: ["fname"],
+      order: [["fname", "desc"]],
+    });
+
+    console.log("=====> userData:", userData);
     res.status(201).json({
-      userData: data,
+      data: data,
+      userData: userData,
     });
   } catch (error) {
     console.log("Order & group by controller Error:- ", error);
   }
 };
+const userLimit = async (req, res) => {
+  try {
+    const twoUserData = await user.findAll({
+      limit: 2,
+    });
 
+    const skipTwoUser = await user.findAll({
+      offset: 2,
+    });
+    const userPagination = await user.findAll({
+      offset: 2,
+      limit: 2,
+    });
+
+    const userCountData = await user.count({
+      where: {
+        age: {
+          [Op.gt]: 23,
+        },
+      },
+    });
+
+    res.status(201).json({
+      userData: twoUserData,
+      useSkip: skipTwoUser,
+      userPagination: userPagination,
+      userCountData: userCountData,
+    });
+  } catch (error) {
+    console.log("user Limit:-", error);
+  }
+};
+const aggregation = async (req, res) => {
+  try {
+    const minUser = await user.min("age");
+
+    const maxUser = await user.max("age");
+    const userSum = await user.sum("age");
+
+    const minUserData = await user.min("age", {
+      where: {
+        age: {
+          [Op.gt]: 22,
+        },
+      },
+    });
+
+    const maxUserData = await user.max("age", {
+      where: {
+        age: {
+          [Op.lt]: 26,
+        },
+      },
+    });
+
+    const userIncrement = await user.increment(
+      { age: 21 },
+      { where: { id: 1 } }
+    );
+
+    const afterIncrementUser = await user.findOne({
+      where: {
+        id: {
+          [Op.eq]: 1,
+        },
+      },
+    });
+
+    const userAgeDecrement = await user.increment(
+      { age: -20 },
+      { where: { id: 1 } }
+    );
+
+    const userAfterDecrement = await user.findOne({
+      where: {
+        id: {
+          [Op.eq]: 1,
+        },
+      },
+    });
+
+    res.status(201).json({
+      minUser: minUser,
+      maxUser: maxUser,
+      userSum: userSum,
+      minUserData: minUserData,
+      maxUserData: maxUserData,
+      userAfterIncrement: afterIncrementUser,
+      userAfterDecrement: userAfterDecrement,
+    });
+  } catch (error) {
+    console.log("aggregation functions:", error);
+  }
+};
 export {
   addUserBasedOnFields,
   getUserBasedOnAttributes,
@@ -198,4 +326,6 @@ export {
   includeExcludeData,
   userOperators,
   orderGroup,
+  userLimit,
+  aggregation,
 };
