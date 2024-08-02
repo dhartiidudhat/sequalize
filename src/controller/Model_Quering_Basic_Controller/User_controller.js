@@ -1,3 +1,4 @@
+import { Sequelize } from "sequelize";
 import user from "../../models/Model_Quering_Basic/user_model.js";
 
 const getUser = async (req, res) => {
@@ -11,12 +12,13 @@ const getUser = async (req, res) => {
 
 const addUser = async (req, res) => {
   try {
-    const { fname, lname, age } = req.body;
+    const { fname, lname, age, gender } = req.body;
     if (Array.isArray(req.body) || req.body.length > 1) {
       const userData = req.body.map((data) => ({
         fname: data.fname,
         lname: data.lname,
         age: data.age,
+        gender: data.gender,
       }));
 
       const addUser = await user.bulkCreate(userData);
@@ -25,12 +27,14 @@ const addUser = async (req, res) => {
         fname: fname,
         lname: lname,
         age: age,
+        gender: gender,
       });
     }
 
     res.status(201).json({ message: "User add successfully!" });
   } catch (error) {
-    console.log("-->addUserController", error);
+    console.log(error);
+    res.status(400).json({ error: error.errors[0].message });
   }
 };
 
