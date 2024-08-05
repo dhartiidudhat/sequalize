@@ -1,4 +1,6 @@
-import user from "../../models/Model_Quering_Basic/user_model.js";
+import { Model, QueryTypes } from "sequelize";
+import { sequelize } from "../../config/db.js";
+import User from "../../models/Model_Quering_Basic/user_model.js";
 
 // Getter is used to modification
 // when we take data from the db the fname is not in upper case but we can show the all name
@@ -6,7 +8,7 @@ import user from "../../models/Model_Quering_Basic/user_model.js";
 
 const showUser = async (req, res) => {
   try {
-    const getUser = await user.findAll({});
+    const getUser = await User.findAll({});
     res.status(201).json({ data: getUser });
   } catch (error) {
     console.log("show User to che getter data", error);
@@ -29,11 +31,38 @@ const createUser = async (req, res) => {
   try {
     const { fname, lname, age } = req.body;
     console.log("fnam", fname, lname, age);
-    const addUser = await user.create({ fname, lname, age });
+    const addUser = await User.create({ fname, lname, age });
     res.status(201).json({ msg: "User create successfully" });
   } catch (error) {
     res.json({ msg: error.errors[0].message });
   }
 };
 
-export { showUser, createUser };
+// -----------------------> raw queries
+
+const userRawQueries = async (req, res) => {
+  try {
+    const userData = await sequelize.query(`select * from User`, {
+      type: QueryTypes.SELECT,
+      // model: User,
+      mapToModel: true,
+      plain: false,
+      logging: console.log,
+      raw: false,
+    });
+
+    
+
+    const [results, metadata] = await sequelize.query("UPDATE User SET age = 24 WHERE id = 1");
+
+    console.log("---->User", User);
+
+    res.status(201).json({
+      data: userData,
+    });
+  } catch (error) {
+    console.log("User Raw Queries controller", error);
+  }
+};
+
+export { showUser, createUser, userRawQueries };
