@@ -51,18 +51,62 @@ const userRawQueries = async (req, res) => {
       raw: false,
     });
 
-    
-
-    const [results, metadata] = await sequelize.query("UPDATE User SET age = 24 WHERE id = 1");
+    const [results, metadata] = await sequelize.query(
+      "UPDATE User SET age = 24 WHERE id = 1"
+    );
 
     console.log("---->User", User);
 
     res.status(201).json({
       data: userData,
+      // user_Data: user_Data,
     });
   } catch (error) {
     console.log("User Raw Queries controller", error);
   }
 };
 
-export { showUser, createUser, userRawQueries };
+const userReplacements = async (req, res) => {
+  try {
+    const userOne = await sequelize.query(`select * from User where id = ? `, {
+      replacements: ["3"],
+      type: QueryTypes.SELECT,
+    });
+
+    const userTwo = await sequelize.query(
+      `select * from User where fname = :fname`,
+      {
+        replacements: { fname: "mauli" },
+        logging: console.log,
+        type: QueryTypes.SELECT,
+      }
+    );
+    const userThree = await sequelize.query(
+      `select * from User where fname in (:fname)`,
+      {
+        replacements: { fname: ["mauli", "dharti"] },
+        logging: console.log,
+        type: QueryTypes.SELECT,
+      }
+    );
+
+    const userFour = await sequelize.query(
+      "SELECT * FROM User WHERE fname LIKE :search_name",
+      {
+        replacements: { search_name: "%i%" },
+        type: QueryTypes.SELECT,
+      }
+    );
+
+    res.status(201).json({
+      userOne: userOne,
+      userTwo: userTwo,
+      userThree,
+      userFour,
+    });
+  } catch (error) {
+    console.log("replacement controller", error);
+  }
+};
+
+export { showUser, createUser, userRawQueries, userReplacements };

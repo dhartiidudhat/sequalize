@@ -47,4 +47,4 @@ export const User2 = async (req, res) => {
   } catch (error) {
     console.log("---->error in second Controller", error);
   }
-};
+}; 
