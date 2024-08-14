@@ -36,9 +36,10 @@ const userOneToOne = async (req, res) => {
 
     const userContactDetails = await userContact.findAll({
       attributes: ["address"],
+
       include: {
         model: user,
-        attributes: ["fname"],z
+        attributes: ["fname"],
       },
     });
 
@@ -52,4 +53,47 @@ const userOneToOne = async (req, res) => {
   }
 };
 
-export { userOneToOne };
+const addAssociatedUser = async (req, res) => {
+  try {
+    const data = await userContact.create({
+      address: "Vastrapur",
+      city: "Ahmedabad",
+      user_id: "2",
+    });
+    res.status(201).json({
+      msg: "Usr address created successfully!",
+      data,
+    });
+  } catch (error) {
+    console.log("Add Associated User", error);
+  }
+};
+
+const userOneToMany = async (req, res) => {
+  try {
+    const userData = await user.findAll({
+      attributes: ["fname", "lname"],
+      include: {
+        model: userContact,
+        attributes: ["address"],
+      },
+    });
+
+    const userContactDetails = await userContact.findAll({
+      attributes: ["address", "city"],
+      include: {
+        model: user,
+        attributes: ["fname"],
+      },
+    });
+    res.status(201).json({
+      msg: "user Found Successfully",
+      userData: userData,
+      userContactDetails,
+    });
+  } catch (error) {
+    console.log("Error in User One To many ", error);
+  }
+};
+
+export { userOneToOne, addAssociatedUser, userOneToMany };

@@ -32,5 +32,6 @@ app.get("/operators", userOperators);
 app.get("/orderGroup", orderGroup);
 app.get("/limit", userLimit);
 app.get("/aggregation", aggregation);
+app.post("/add")
 
 export default app;

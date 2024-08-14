@@ -2,7 +2,7 @@ import User1 from "../../models/Model_Instance/user1.js";
 
 export const addUser = async (req, res) => {
   try {
-    const newUser = await User1.build({
+    const newUser =   User1.build({
       firstName: "Dharti",
       lastName: "Dudhat",
     });
@@ -13,7 +13,6 @@ export const addUser = async (req, res) => {
 
     await newUser.save();
     res.status(200).json(newUser.toJSON());
-
     console.log("----> new user saved successfully !");
   } catch (error) {
     console.log("--->error n user controller");
